@@ -1,5 +1,9 @@
 <template>
-  <div class="home"><h1>Home</h1></div>
+  <v-row justify="start">
+    <v-col align="center">
+      <h1>Home</h1>
+    </v-col>
+  </v-row>
 </template>
 
 <script>

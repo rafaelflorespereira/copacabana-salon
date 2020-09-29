@@ -1,7 +1,7 @@
 <template>
-  <v-row>
-    <v-col>
-      <v-sheet height="64">
+  <v-container>
+    <v-row>
+      <v-col align="center">
         <v-toolbar flat>
           <v-btn outlined class="mr-4" color="grey darken-2" @click="setToday">
             Today
@@ -45,53 +45,89 @@
             </v-list>
           </v-menu>
         </v-toolbar>
-      </v-sheet>
-      <v-sheet height="600">
-        <v-calendar
-          ref="calendar"
-          v-model="focus"
-          color="primary"
-          :events="events"
-          :event-color="getEventColor"
-          :type="type"
-          @click:event="showEvent"
-          @click:more="viewDay"
-          @click:date="viewDay"
-          @change="updateRange"
-        ></v-calendar>
-        <v-menu
-          v-model="selectedOpen"
-          :close-on-content-click="false"
-          :activator="selectedElement"
-          offset-x
-        >
-          <v-card color="grey lighten-4" min-width="350px" flat>
-            <v-toolbar :color="selectedEvent.color" dark>
-              <v-btn icon>
-                <v-icon>mdi-pencil</v-icon>
-              </v-btn>
-              <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
-              <v-spacer></v-spacer>
-              <v-btn icon>
-                <v-icon>mdi-heart</v-icon>
-              </v-btn>
-              <v-btn icon>
-                <v-icon>mdi-dots-vertical</v-icon>
-              </v-btn>
-            </v-toolbar>
-            <v-card-text>
-              <span v-html="selectedEvent.details"></span>
-            </v-card-text>
-            <v-card-actions>
-              <v-btn text color="secondary" @click="selectedOpen = false">
-                Cancel
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-menu>
-      </v-sheet>
-    </v-col>
-  </v-row>
+        <v-col>
+          <v-sheet>
+            <v-calendar
+              ref="calendar"
+              v-model="focus"
+              color="primary"
+              :events="events"
+              :event-color="getEventColor"
+              :type="type"
+              @click:event="showEvent"
+              @click:more="viewDay"
+              @click:date="viewDay"
+              @click:time="createAppointment"
+              @change="updateRange"
+            ></v-calendar>
+            <v-menu
+              v-model="selectedOpen"
+              :close-on-content-click="false"
+              :activator="selectedElement"
+              offset-x
+            >
+              <v-row>
+                <v-col>
+                  <v-card
+                    color="grey lighten-4"
+                    min-width="350px"
+                    flat
+                    offset-x
+                  >
+                    <v-toolbar :color="appointment.color" dark>
+                      <v-toolbar-title
+                        v-html="appointment.name"
+                      ></v-toolbar-title>
+                    </v-toolbar>
+                    <v-card-text>
+                      <v-select
+                        label="Select Service"
+                        v-model="selectedAppointment"
+                        :items="[0, 1, 2, 3, 4, 5, 6, 7, 8]"
+                      ></v-select>
+                      <v-text-field
+                        outlined
+                        label="Client Name"
+                        v-model="appointment.clientName"
+                      ></v-text-field>
+                      <v-text-field
+                        @click="openClock = !openClock"
+                        outlined
+                        label="Start Time"
+                        v-model="appointment.startTime"
+                      ></v-text-field>
+                      <v-text-field
+                        outlined
+                        label="End Time"
+                        v-model="appointment.endTime"
+                      ></v-text-field>
+                    </v-card-text>
+                    <v-card-actions>
+                      <v-btn
+                        text
+                        color="secondary"
+                        @click="selectedOpen = false"
+                      >
+                        Cancel
+                      </v-btn>
+                      <v-btn color="success">Submit</v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-col>
+                <v-col v-if="openClock">
+                  <v-time-picker
+                    ampm-in-title
+                    format="ampm"
+                    landscape
+                  ></v-time-picker>
+                </v-col>
+              </v-row>
+            </v-menu>
+          </v-sheet>
+        </v-col>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
@@ -128,9 +164,28 @@ export default {
       "Conference",
       "Party",
     ],
+    selectedAppointment: 0,
+    services: [],
+    openClock: false,
   }),
   mounted() {
     this.$refs.calendar.checkChange();
+  },
+  created() {
+    this.services = this.$store.getters.services;
+  },
+  computed: {
+    appointment() {
+      return {
+        clientName: "",
+        startTime: 0,
+        endTime: this.services[this.selectedAppointment].timeMinutes,
+        name: this.services[this.selectedAppointment].name,
+        service: this.services[this.selectedAppointment].service,
+        price: this.services[this.selectedAppointment].price,
+        color: this.services[this.selectedAppointment].color,
+      };
+    },
   },
   methods: {
     viewDay({ date }) {
@@ -167,6 +222,16 @@ export default {
 
       nativeEvent.stopPropagation();
     },
+    createAppointment(event) {
+      this.selectedOpen = true;
+      const start = new Date(event.date + "T" + event.time);
+      const end = new Date(
+        Date.parse(start) + this.appointment.endTime * 60000
+      );
+      this.appointment.startTime = start;
+      this.appointment.endTime = end;
+    },
+    //Unecessary
     updateRange({ start, end }) {
       const events = [];
 

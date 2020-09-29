@@ -1,9 +1,8 @@
 <template>
   <v-app>
-    <v-app-bar app color="white">
+    <v-app-bar app color="white" hide-on-scroll>
       <v-spacer></v-spacer>
       <v-btn
-        outline
         color="white"
         v-for="(route, index) in routes"
         :key="index"
@@ -13,10 +12,8 @@
     </v-app-bar>
 
     <v-main>
-      <v-slide-x-reverse-transition hide-on-leave>
-        <v-container fill-height>
-          <router-view></router-view>
-        </v-container>
+      <v-slide-x-reverse-transition leave-absolute>
+        <router-view></router-view>
       </v-slide-x-reverse-transition>
     </v-main>
   </v-app>
