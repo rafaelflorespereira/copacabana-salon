@@ -1,32 +1,56 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view />
-  </div>
+  <v-app>
+    <v-app-bar app color="white">
+      <v-spacer></v-spacer>
+      <v-btn
+        outline
+        color="white"
+        v-for="(route, index) in routes"
+        :key="index"
+        :to="route.url"
+        >{{ route.label }}</v-btn
+      >
+    </v-app-bar>
+
+    <v-main>
+      <v-slide-x-reverse-transition hide-on-leave>
+        <v-container fill-height>
+          <router-view></router-view>
+        </v-container>
+      </v-slide-x-reverse-transition>
+    </v-main>
+  </v-app>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+export default {
+  name: "App",
 
-#nav {
-  padding: 30px;
-}
+  data: () => ({
+    routes: [
+      {
+        label: "home",
+        url: "/",
+      },
+      {
+        label: "Users",
+        url: "/users",
+      },
+      {
+        label: "products",
+        url: "/products",
+      },
+      {
+        label: "Calendar",
+        url: "/calendar",
+      },
+    ],
+  }),
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
+  /*   computed: {
+    changeTheme() {
+      return;
+    },
+  }, */
+};
+</script>
