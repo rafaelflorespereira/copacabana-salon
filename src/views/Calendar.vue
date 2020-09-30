@@ -59,6 +59,7 @@
               @click:date="viewDay"
               @click:time="createAppointment"
               @change="updateRange"
+              elevation="8"
             ></v-calendar>
             <v-menu
               v-model="selectedOpen"
@@ -136,7 +137,7 @@ export default {
       month: "Month",
       week: "Week",
       day: "Day",
-      "4day": "4 Days"
+      "4day": "4 Days",
     },
     selectedEvent: {},
     selectedElement: null,
@@ -149,7 +150,7 @@ export default {
       "cyan",
       "green",
       "orange",
-      "grey darken-1"
+      "grey darken-1",
     ],
     names: [
       "Meeting",
@@ -159,10 +160,10 @@ export default {
       "Event",
       "Birthday",
       "Conference",
-      "Party"
+      "Party",
     ],
     openClock: false,
-    appointmenId: 0
+    appointmenId: 0,
   }),
   mounted() {
     this.$refs.calendar.checkChange();
@@ -173,9 +174,9 @@ export default {
     },
     appointmenId(val) {
       this.appointmenId = val;
-      const appointment = this.services.find(service => service.name === val);
+      const appointment = this.services.find((service) => service.name === val);
       this.$store.commit("SET_APPOINTMENT", appointment.id);
-    }
+    },
   },
   computed: {
     ...mapGetters(["services", "servicesNames", "selectedAppointment"]),
@@ -186,9 +187,9 @@ export default {
         endTime: this.services[this.selectedAppointment].timeMinutes,
         name: this.services[this.selectedAppointment].name,
         price: this.services[this.selectedAppointment].price,
-        color: this.services[this.selectedAppointment].color
+        color: this.services[this.selectedAppointment].color,
       };
-    }
+    },
   },
   methods: {
     viewDay({ date }) {
@@ -255,7 +256,7 @@ export default {
           start: first,
           end: second,
           color: this.colors[this.rnd(0, this.colors.length - 1)],
-          timed: !allDay
+          timed: !allDay,
         });
       }
 
@@ -263,7 +264,7 @@ export default {
     },
     rnd(a, b) {
       return Math.floor((b - a + 1) * Math.random()) + a;
-    }
-  }
+    },
+  },
 };
 </script>
