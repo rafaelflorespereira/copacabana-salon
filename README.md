@@ -11,4 +11,4 @@ Contents:
 5. Data table for Users and Products
 6. Create Dummy Table for both
 
-It is made with Vue.
+this is made with Vue.

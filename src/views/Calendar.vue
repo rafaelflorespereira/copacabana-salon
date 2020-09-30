@@ -68,12 +68,7 @@
             >
               <v-row>
                 <v-col>
-                  <v-card
-                    color="grey lighten-4"
-                    min-width="350px"
-                    flat
-                    offset-x
-                  >
+                  <v-card>
                     <v-toolbar :color="appointment.color" dark>
                       <v-toolbar-title
                         v-html="appointment.name"
@@ -82,8 +77,9 @@
                     <v-card-text>
                       <v-select
                         label="Select Service"
-                        v-model="selectedAppointment"
-                        :items="[0, 1, 2, 3, 4, 5, 6, 7, 8]"
+                        v-model="appointmenId"
+                        :items="servicesNames"
+                        id
                       ></v-select>
                       <v-text-field
                         outlined
@@ -131,6 +127,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
   data: () => ({
     focus: "",
@@ -139,7 +136,7 @@ export default {
       month: "Month",
       week: "Week",
       day: "Day",
-      "4day": "4 Days",
+      "4day": "4 Days"
     },
     selectedEvent: {},
     selectedElement: null,
@@ -152,7 +149,7 @@ export default {
       "cyan",
       "green",
       "orange",
-      "grey darken-1",
+      "grey darken-1"
     ],
     names: [
       "Meeting",
@@ -162,30 +159,36 @@ export default {
       "Event",
       "Birthday",
       "Conference",
-      "Party",
+      "Party"
     ],
-    selectedAppointment: 0,
-    services: [],
     openClock: false,
+    appointmenId: 0
   }),
   mounted() {
     this.$refs.calendar.checkChange();
   },
-  created() {
-    this.services = this.$store.getters.services;
+  watch: {
+    appointment() {
+      console.log(this.appointment);
+    },
+    appointmenId(val) {
+      this.appointmenId = val;
+      const appointment = this.services.find(service => service.name === val);
+      this.$store.commit("SET_APPOINTMENT", appointment.id);
+    }
   },
   computed: {
+    ...mapGetters(["services", "servicesNames", "selectedAppointment"]),
     appointment() {
       return {
         clientName: "",
         startTime: 0,
         endTime: this.services[this.selectedAppointment].timeMinutes,
         name: this.services[this.selectedAppointment].name,
-        service: this.services[this.selectedAppointment].service,
         price: this.services[this.selectedAppointment].price,
-        color: this.services[this.selectedAppointment].color,
+        color: this.services[this.selectedAppointment].color
       };
-    },
+    }
   },
   methods: {
     viewDay({ date }) {
@@ -252,7 +255,7 @@ export default {
           start: first,
           end: second,
           color: this.colors[this.rnd(0, this.colors.length - 1)],
-          timed: !allDay,
+          timed: !allDay
         });
       }
 
@@ -260,7 +263,7 @@ export default {
     },
     rnd(a, b) {
       return Math.floor((b - a + 1) * Math.random()) + a;
-    },
-  },
+    }
+  }
 };
 </script>

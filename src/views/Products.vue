@@ -1,9 +1,21 @@
 <template>
-  <div><h1>Products</h1></div>
+  <div>
+    <ul v-for="service in services" :key="service.key">
+      <li>
+        {{ service.name }}
+      </li>
+    </ul>
+  </div>
 </template>
 
 <script>
-export default {};
+export default {
+  computed: {
+    services() {
+      return this.$store.getters.services;
+    }
+  }
+};
 </script>
 
 <style></style>
