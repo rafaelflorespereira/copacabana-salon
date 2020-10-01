@@ -6,61 +6,61 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     appointment: 0,
-    services: [
-      {
-        id: 0,
-        name: "Unha-Mao",
-        price: "10",
-        timeMinutes: "40",
-        color: "indigo",
-      },
-      {
-        id: 1,
-        name: "Unha-Pe",
-        price: "10",
-        timeMinutes: "40",
-        color: "deep-purple",
-      },
-      {
-        id: 2,
-        name: "cabelo",
-        price: "10",
-        timeMinutes: "40",
-        color: "cyan",
-      },
-      {
-        id: 3,
-        name: "polish",
-        price: "10",
-        timeMinutes: "40",
-        color: "orange",
-      },
-    ],
+    services: [],
+    products: [],
+    enhancements: []
   },
   mutations: {
     SET_APPOINTMENT(state, payload) {
       state.appointment = payload;
     },
+    ADD_SERVICE(state, payload) {
+      state.services.push(payload);
+    },
+    ADD_PRODUCT(state, product) {
+      state.products.push(product);
+    },
+    ADD_ENHANCEMENTS(state, enhancements) {
+      state.enhancements = enhancements;
+    }
   },
   actions: {
+    /* Services */
     addService: () => {},
     updateService: () => {},
     deleteService: () => {},
+    fetchServices: () => {},
+    /* products */
+    addProduct: () => {},
+    updateProduct: () => {},
+    deleteProduct: () => {},
+    fetchProducts: () => {},
+    /* enhancements */
+    addEnhancement: () => {},
+    updateEnhancement: () => {},
+    deleteEnhancement: () => {},
+    fetchEnhancements: () => {}
   },
   modules: {},
   getters: {
-    selectedAppointment: (state) => {
+    selectedAppointment: state => {
       return state.appointment;
     },
-    services: (state) => {
+    services: state => {
       return state.services;
     },
-    servicesNames: (state) => {
+    products: state => {
+      return state.products;
+    },
+    enhancements: state => {
+      return state.enhancements;
+    },
+    servicesNames: state => {
       const names = [];
-      state.services.forEach((service) => {
+      state.services.forEach(service => {
         names.push(service.name);
       });
       return names;
-    },
-  },
+    }
+  }
 });

@@ -3,15 +3,15 @@
     <v-app-bar app color="white" hide-on-scroll>
       <v-spacer></v-spacer>
       <v-btn
-        color="white"
         v-for="(route, index) in routes"
         :key="index"
+        color="white"
         :to="route.url"
         >{{ route.label }}</v-btn
       >
     </v-app-bar>
 
-    <v-main>
+    <v-main class="background">
       <v-slide-x-reverse-transition leave-absolute>
         <router-view></router-view>
       </v-slide-x-reverse-transition>
@@ -27,22 +27,22 @@ export default {
     routes: [
       {
         label: "home",
-        url: "/",
+        url: "/"
       },
       {
         label: "Users",
-        url: "/users",
+        url: "/users"
       },
       {
         label: "products",
-        url: "/products",
+        url: "/products"
       },
       {
         label: "Calendar",
-        url: "/calendar",
-      },
-    ],
-  }),
+        url: "/calendar"
+      }
+    ]
+  })
 
   /*   computed: {
     changeTheme() {
@@ -51,3 +51,9 @@ export default {
   }, */
 };
 </script>
+
+<style>
+.background {
+  background-color: #263238;
+}
+</style>
