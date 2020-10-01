@@ -21,35 +21,37 @@
 
 <script>
 export default {
-  name: "App",
-
+  name: 'App',
   data: () => ({
     routes: [
       {
-        label: "home",
-        url: "/"
+        label: 'home',
+        url: '/'
       },
       {
-        label: "Users",
-        url: "/users"
+        label: 'Users',
+        url: '/users'
       },
       {
-        label: "products",
-        url: "/products"
+        label: 'products',
+        url: '/products'
       },
       {
-        label: "Calendar",
-        url: "/calendar"
+        label: 'Calendar',
+        url: '/calendar'
       }
     ]
-  })
+  }),
+  created() {
+    this.$store.dispatch('fetchServices')
+  }
 
   /*   computed: {
     changeTheme() {
       return;
     },
   }, */
-};
+}
 </script>
 
 <style>
