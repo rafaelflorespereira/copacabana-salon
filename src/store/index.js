@@ -25,7 +25,8 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    /* Services */
+    /* Services
+     */
     addService: () => {},
     updateService: () => {},
     deleteService: () => {},
