@@ -7,6 +7,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     appointment: 0,
+    appointments: [],
     services: [],
     products: [],
     enhancements: []
@@ -81,7 +82,7 @@ export default new Vuex.Store({
   },
   modules: {},
   getters: {
-    selectedAppointment: state => {
+    appointment: state => {
       return state.appointment
     },
     services: state => {
@@ -100,6 +101,9 @@ export default new Vuex.Store({
         names.push(service.name)
       })
       return names
+    },
+    appointments: state => {
+      return state.appointments
     }
   }
 })

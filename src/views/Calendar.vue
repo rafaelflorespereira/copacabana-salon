@@ -1,7 +1,7 @@
 <template>
   <v-container>
-    <v-row>
-      <v-col align="center">
+    <v-row justify="center">
+      <v-col cols="6">
         <v-toolbar flat>
           <v-btn outlined class="mr-4" color="grey darken-2" @click="setToday">
             Today
@@ -51,7 +51,7 @@
               ref="calendar"
               v-model="focus"
               color="primary"
-              :events="events"
+              :events="appointmentsCalendar"
               :event-color="getEventColor"
               :type="type"
               elevation="8"
@@ -59,7 +59,6 @@
               @click:more="viewDay"
               @click:date="viewDay"
               @click:time="createAppointment"
-              @change="updateRange"
             ></v-calendar>
             <v-menu
               v-model="selectedOpen"
@@ -70,7 +69,7 @@
               <v-row>
                 <v-col>
                   <v-card>
-                    <v-toolbar :color="appointment.color" dark>
+                    <v-toolbar color="#6D4C41" dark>
                       <v-toolbar-title>{{ appointment.name }}</v-toolbar-title>
                     </v-toolbar>
                     <v-card-text>
@@ -143,15 +142,17 @@ export default {
     appointmentId: 0
   }),
   computed: {
-    ...mapGetters(['services', 'servicesNames', 'selectedAppointment']),
+    ...mapGetters(['services', 'servicesNames', 'appointments']),
+    appointmentsCalendar() {
+      return this.appointments
+    },
     appointment() {
       return {
         clientName: '',
+        name: this.services[this.appointmentId].name,
+        price: this.services[this.appointmentId].price,
         startTime: 0,
-        endTime: this.services[this.selectedAppointment].timeMinutes,
-        name: this.services[this.selectedAppointment].name,
-        price: this.services[this.selectedAppointment].price,
-        color: this.services[this.selectedAppointment].color
+        endTime: 0
       }
     }
   },
@@ -161,8 +162,8 @@ export default {
       this.$store.commit('SET_APPOINTMENT', appointment.id)
     }
   },
-  mounted() {
-    this.$refs.calendar.checkChange()
+  created() {
+    this.appointmentId = this.$store.getters.appointment
   },
   methods: {
     viewDay({ date }) {
@@ -180,24 +181,6 @@ export default {
     },
     next() {
       this.$refs.calendar.next()
-    },
-    showEvent({ nativeEvent, event }) {
-      const open = () => {
-        this.selectedEvent = event
-        this.selectedElement = nativeEvent.target
-        setTimeout(() => {
-          this.selectedOpen = true
-        }, 10)
-      }
-
-      if (this.selectedOpen) {
-        this.selectedOpen = false
-        setTimeout(open, 10)
-      } else {
-        open()
-      }
-
-      nativeEvent.stopPropagation()
     },
     createAppointment(event) {
       this.selectedOpen = true

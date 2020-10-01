@@ -1,10 +1,19 @@
 <template>
   <div>
+    <v-row>
+      <v-toolbar flat>
+        <v-row justify="center">
+          <v-btn text>Products</v-btn>
+          <v-btn text>Services</v-btn>
+          <v-btn text>Enhancements</v-btn>
+        </v-row>
+      </v-toolbar>
+    </v-row>
     <v-row justify="center">
       <v-col cols="8">
         <v-card>
           <v-card-title>
-            Services Table
+            Services' Table
             <v-spacer></v-spacer>
             <v-btn icon @click="removeServices"
               ><v-icon>mdi-trash-can-outline</v-icon></v-btn
@@ -49,6 +58,9 @@
         </v-form>
       </v-col>
     </v-row>
+    <v-snackbar v-model="showSnackbar" dark app timeout="3000">
+      Service deleted
+    </v-snackbar>
   </div>
 </template>
 
@@ -97,7 +109,8 @@ export default {
         { text: 'Price', value: 'price' }
       ],
       enhancementsHeaders: [],
-      productHeaders: []
+      productHeaders: [],
+      showSnackbar: false
     }
   },
   computed: {
@@ -122,11 +135,13 @@ export default {
       this.service.price = ''
     },
     removeServices() {
-      if (this.selected.length > 0)
+      if (this.selected.length > 0) {
+        this.showSnackbar = true
         this.selected.forEach(element => {
           this.deleteService(element)
           this.selected.splice(this.selected.indexOf(element), 1)
         })
+      }
     },
     addProduct() {
       this.addServiceOnServer({
