@@ -33,8 +33,8 @@ export default {
         url: '/users'
       },
       {
-        label: 'products',
-        url: '/products'
+        label: 'Store',
+        url: '/store/services'
       },
       {
         label: 'Calendar',

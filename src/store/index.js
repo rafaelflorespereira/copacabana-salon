@@ -19,9 +19,6 @@ export default new Vuex.Store({
     ADD_SERVICE(state, payload) {
       state.services.push(payload)
     },
-    SET_SERVICES(state, services) {
-      state.services = services
-    },
     REMOVE_SERVICE(state, service) {
       const servicesId = state.services.find(el => el.key === service.key)
       state.services.splice(state.services.indexOf(servicesId), 1)
@@ -29,8 +26,18 @@ export default new Vuex.Store({
     ADD_PRODUCT(state, product) {
       state.products.push(product)
     },
-    ADD_ENHANCEMENTS(state, enhancements) {
-      state.enhancements = enhancements
+    REMOVE_PRODUCT(state, product) {
+      const productsId = state.products.find(el => el.key === product.key)
+      state.products.splice(state.products.indexOf(productsId), 1)
+    },
+    ADD_ENHANCEMENT(state, enhancement) {
+      state.enhancement.push(enhancement)
+    },
+    REMOVE_ENHANCEMENT(state, enhacements) {
+      const enhancementsId = state.enhancements.find(
+        el => el.key === enhacements.key
+      )
+      state.enhancements.splice(state.enhancements.indexOf(enhancementsId), 1)
     }
   },
   actions: {
@@ -45,11 +52,11 @@ export default new Vuex.Store({
         })
         .then(error => console.log(error))
     },
-    deleteService: ({ commit }, service) => {
+    deleteService: ({ commit }, serviceKey) => {
       axios
         .delete(
           'https://copabacana-salon.firebaseio.com/services/' +
-            service.key +
+            serviceKey +
             '.json'
         )
         .then(response => {
@@ -70,13 +77,42 @@ export default new Vuex.Store({
         })
     },
     /* products */
-    addProduct: () => {},
-    updateProduct: () => {},
-    deleteProduct: () => {},
-    fetchProducts: () => {},
+    addProduct: ({ commit }, product) => {
+      axios
+        .post('https://copabacana-salon.firebaseio.com/products.json', product)
+        .then(response => {
+          console.log(response.data)
+          product.key = response.data.name
+          commit('ADD_PRODUCT', product)
+        })
+        .then(error => console.log(error))
+    },
+    deleteProduct: ({ commit }, product) => {
+      axios
+        .delete(
+          'https://copabacana-salon.firebaseio.com/products/' +
+            product.key +
+            '.json'
+        )
+        .then(response => {
+          console.log(response)
+          commit('REMOVE_PRODUCT', response)
+        })
+        .then(error => console.log(error))
+    },
+    fetchProducts: ({ commit }) => {
+      axios
+        .get('https://copabacana-salon.firebaseio.com/products.json')
+        .then(response => {
+          for (const key in response.data) {
+            var product = response.data[key]
+            product.key = key
+            commit('ADD_PRODUCT', product)
+          }
+        })
+    },
     /* enhancements */
     addEnhancement: () => {},
-    updateEnhancement: () => {},
     deleteEnhancement: () => {},
     fetchEnhancements: () => {}
   },
@@ -85,15 +121,12 @@ export default new Vuex.Store({
     appointment: state => {
       return state.appointment
     },
+    appointments: state => {
+      return state.appointments
+    },
     services: state => {
       if (state.services == null) return
       return state.services
-    },
-    products: state => {
-      return state.products
-    },
-    enhancements: state => {
-      return state.enhancements
     },
     servicesNames: state => {
       const names = []
@@ -102,8 +135,11 @@ export default new Vuex.Store({
       })
       return names
     },
-    appointments: state => {
-      return state.appointments
+    products: state => {
+      return state.products
+    },
+    enhancements: state => {
+      return state.enhancements
     }
   }
 })

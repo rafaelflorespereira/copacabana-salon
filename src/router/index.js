@@ -2,8 +2,11 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Users from '../views/Users.vue'
-import Products from '../views/Products.vue'
+import Store from '../views/Store.vue'
 import Calendar from '../views/Calendar.vue'
+import Products from '../components/Products.vue'
+import Services from '../components/Services.vue'
+import Enhancements from '../components/Enhancements.vue'
 
 Vue.use(VueRouter)
 
@@ -28,9 +31,23 @@ const routes = [
     component: Users
   },
   {
-    path: '/products',
-    name: 'Products',
-    component: Products
+    path: '/store',
+    name: 'Store',
+    component: Store,
+    children: [
+      {
+        path: 'products',
+        component: Products
+      },
+      {
+        path: 'services',
+        component: Services
+      },
+      {
+        path: 'enhancements',
+        component: Enhancements
+      }
+    ]
   },
   {
     path: '/calendar',
