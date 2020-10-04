@@ -19,6 +19,10 @@ export default new Vuex.Store({
     ADD_SERVICE(state, payload) {
       state.services.push(payload)
     },
+    UPDATE_SERVICE(state, payload) {
+      console.log(payload.service, state.services[payload.index])
+      Object.assign(state.services[payload.index], payload.service)
+    },
     REMOVE_SERVICE(state, service) {
       const servicesId = state.services.find(el => el.key === service.key)
       state.services.splice(state.services.indexOf(servicesId), 1)
@@ -42,26 +46,36 @@ export default new Vuex.Store({
   },
   actions: {
     /* Services */
-    addService: ({ commit }, service) => {
+    saveService: ({ commit }, service) => {
       axios
         .post('https://copabacana-salon.firebaseio.com/services.json', service)
         .then(response => {
-          console.log(response.data)
           service.key = response.data.name
           commit('ADD_SERVICE', service)
         })
         .then(error => console.log(error))
     },
-    deleteService: ({ commit }, serviceKey) => {
+    updateService: ({ commit }, payload) => {
+      axios
+        .put(
+          'https://copabacana-salon.firebaseio.com/services/' +
+            payload.service.key +
+            '.json',
+          payload.service
+        )
+        .then(commit('UPDATE_SERVICE', payload))
+        .then(error => console.log('Update Service Error: ' + error))
+    },
+    deleteService: ({ commit }, service) => {
       axios
         .delete(
           'https://copabacana-salon.firebaseio.com/services/' +
-            serviceKey +
+            service.key +
             '.json'
         )
         .then(response => {
           console.log(response)
-          commit('REMOVE_SERVICE', response)
+          commit('REMOVE_SERVICE', service)
         })
         .then(error => console.log(error))
     },
@@ -95,7 +109,6 @@ export default new Vuex.Store({
             '.json'
         )
         .then(response => {
-          console.log(response)
           commit('REMOVE_PRODUCT', response)
         })
         .then(error => console.log(error))

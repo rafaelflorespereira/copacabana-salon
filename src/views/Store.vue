@@ -9,9 +9,7 @@
         </v-row>
       </v-toolbar>
     </v-row>
-    <v-slide-x-reverse-transition>
-      <router-view></router-view>
-    </v-slide-x-reverse-transition>
+    <router-view></router-view>
   </div>
 </template>
 
