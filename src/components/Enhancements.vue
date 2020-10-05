@@ -1,164 +1,177 @@
 <template>
-  <div>
-    <v-row justify="center">
-      <v-col cols="8">
-        <v-card>
-          <v-card-title>
-            Enhacements' Table
+  <v-row justify="center">
+    <v-col cols="8">
+      <v-data-table :headers="itemsHeaders" :items="enhacements">
+        <template v-slot:top>
+          <v-toolbar flat>
+            <v-toolbar-title>
+              products
+            </v-toolbar-title>
+            <v-divider class="mx-4" inset vertical></v-divider>
             <v-spacer></v-spacer>
-            <v-btn icon @click="removeServices"
-              ><v-icon>mdi-trash-can-outline</v-icon></v-btn
-            >
-          </v-card-title>
-          <v-data-table
-            v-model="selected"
-            :headers="servicesHeaders"
-            :items="services"
-            class="elevation-1"
-            show-select
-          >
-          </v-data-table>
-        </v-card>
-      </v-col>
-      <v-col cols="3">
-        <v-form justify="center">
-          <v-card elevation="12">
-            <v-card-title>Add Service</v-card-title>
-            <v-col>
-              <v-text-field
-                v-model="service.niche"
-                label="niche"
-              ></v-text-field>
-              <v-text-field
-                v-model="service.category"
-                label="category"
-              ></v-text-field>
-              <v-text-field v-model="service.name" label="name"></v-text-field>
-              <v-text-field
-                v-model="service.price"
-                label="price in $"
-                type="number"
-              ></v-text-field>
-              <v-row align="center">
+            <v-dialog v-model="dialog" width="500px">
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                  color="success"
+                  dark
+                  class="mb-2"
+                  v-bind="attrs"
+                  v-on="on"
+                >
+                  Create</v-btn
+                >
+              </template>
+              <v-card>
+                <v-card-title>
+                  <span class="headline">{{ formTitle }}</span>
+                </v-card-title>
+                <v-card-text>
+                  <v-container>
+                    <v-row>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-text-field
+                          v-model="editedItem.brand"
+                          label="brand"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-text-field
+                          v-model="editedItem.name"
+                          label="Name"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12" sm="6" md="4">
+                        <v-text-field
+                          v-model="editedItem.price"
+                          type="number"
+                          label="Price in $"
+                        ></v-text-field>
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                </v-card-text>
+
                 <v-card-actions>
-                  <v-btn color="success" dark @click="addService">CREATE</v-btn>
+                  <v-spacer></v-spacer>
+                  <v-btn color="red darken-1" text @click="close">CLOSE</v-btn>
+                  <v-btn color="success" text @click="save">Save</v-btn>
                 </v-card-actions>
-              </v-row>
-            </v-col>
-          </v-card>
-        </v-form>
-      </v-col>
-    </v-row>
-    <v-snackbar v-model="showSnackbar" dark app timeout="3000">
-      {{
-        selected.length > 1
-          ? `${selected.length} services deleted`
-          : 'service deleted'
-      }}
-    </v-snackbar>
-  </div>
+              </v-card>
+            </v-dialog>
+            <v-dialog v-model="dialogDelete" max-width="500px">
+              <v-card>
+                <v-card-title class="headline">
+                  Are you sure you want to delete this item?
+                </v-card-title>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="secondary" text @click="closeDelete">No</v-btn>
+                  <v-btn color="success" text @click="deleteItemConfirm"
+                    >Yes</v-btn
+                  >
+                  <v-spacer></v-spacer>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </v-toolbar>
+        </template>
+        <template v-slot:item.actions="{ item }">
+          <v-icon small class="mr-2" @click="editService(item)"
+            >mdi-pencil</v-icon
+          >
+          <v-icon small class="mr-2" @click="deleteService(item)"
+            >mdi-delete</v-icon
+          >
+        </template>
+      </v-data-table>
+    </v-col>
+  </v-row>
 </template>
 <script>
 import { mapActions, mapGetters } from 'vuex'
 export default {
-  filters: {
-    numberToCash(num) {
-      return num.toLocaleString('en', {
-        useGrouping: false,
-        minimumFractionDigits: 2
-      })
-    }
-  },
   data: () => {
     return {
-      /* These will be got from the server */
-      service: {
-        niche: '',
-        category: '',
-        name: '',
-        price: ''
-      },
-      product: {
+      showSnackbar: false,
+      dialog: false,
+      dialogDelete: false,
+      itemIndex: -1,
+      editedItem: {
         brand: '',
         name: '',
-        amount: '',
         price: ''
       },
-      enhancement: {
+      defaultItem: {
+        brand: '',
         name: '',
         price: ''
       },
-      /* These are for the front-end purpose */
-      selected: [],
-      servicesHeaders: [
-        { text: 'Id', value: 'id' },
+      itemsHeaders: [
         {
-          text: 'Niche',
+          text: 'Brand',
           align: 'start',
           sortable: true,
-          value: 'niche'
+          value: 'brand'
         },
-        { text: 'Category', value: 'category' },
         { text: 'Name', value: 'name' },
-        { text: 'Price', value: 'price' }
-      ],
-      enhancementsHeaders: [],
-      productHeaders: [],
-      showSnackbar: false
+        { text: 'Price', value: 'price' },
+        { text: 'Actions', value: 'actions', sortable: false }
+      ]
     }
   },
   computed: {
-    ...mapGetters(['services', 'products', 'enhancements'])
+    ...mapGetters(['enhancements']),
+    formTitle() {
+      return this.itemIndex === -1 ? 'Create Item' : 'Update Item'
+    }
   },
   methods: {
     ...mapActions({
-      addServiceOnServer: 'addService',
-      deleteService: 'deleteService'
+      saveItemOnServer: 'saveEnhancement',
+      updateItemOnServer: 'updateEnhancement',
+      deleteItemOnServer: 'deleteEnhancement'
     }),
-    addService() {
-      this.addServiceOnServer({
-        id: this.services.length,
-        niche: this.service.niche,
-        category: this.service.category,
-        name: this.service.name,
-        price: this.service.price
+    close() {
+      this.dialog = false
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem)
+        this.itemIndex = -1
       })
-      this.service.niche = ''
-      this.service.category = ''
-      this.service.name = ''
-      this.service.price = ''
     },
-    removeServices() {
-      if (this.selected.length > 0) {
-        this.showSnackbar = true
-        this.selected.forEach(element => {
-          this.deleteService(element)
-          this.selected.pop()
+    save() {
+      //*Edits
+      if (this.itemIndex > -1) {
+        this.updateItemOnServer({
+          service: this.editedItem,
+          index: this.itemIndex
         })
+      } else {
+        //*Saves
+        this.saveItemOnServer(Object.assign({}, this.editedItem))
       }
+      this.close()
     },
-    addProduct() {
-      this.addServiceOnServer({
-        id: this.products.length,
-        brand: this.product.brand,
-        name: this.product.name,
-        amount: this.product.amount,
-        price: this.product.price
-      })
-      this.product.brand = ''
-      this.product.name = ''
-      this.product.amount = ''
-      this.product.price = ''
+    deleteService(item) {
+      this.editedItem = Object.assign({}, item)
+      this.dialogDelete = true
     },
-    addEnhancement() {
-      this.$store.commit('ADD_ENHANCEMENT', {
-        id: this.enhancements.lenght,
-        name: this.enhancement.name,
-        price: this.enhancement.price
+    closeDelete() {
+      this.dialogDelete = false
+      this.$nextTick(() => {
+        this.itemIndex = -1
+        this.editedItem = Object.assign({}, this.defaultItem)
       })
-      this.enhancement.name = ''
-      this.enhancement.price = ''
+    },
+    deleteItemConfirm() {
+      this.deleteItemOnServer(this.editedItem)
+      this.closeDelete()
+    },
+    editService(item) {
+      this.itemIndex = this.products.indexOf(item)
+      this.editedItem = Object.assign({}, item)
+      this.dialog = true
     }
+    //todos CREATE VALIDATION FOR INPUTS
   }
 }
 </script>

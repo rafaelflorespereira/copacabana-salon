@@ -9,6 +9,7 @@
         </v-row>
       </v-toolbar>
     </v-row>
+    <!-- TODOS add transition -->
     <router-view></router-view>
   </div>
 </template>

@@ -44,6 +44,8 @@ export default {
   }),
   created() {
     this.$store.dispatch('fetchServices')
+    this.$store.dispatch('fetchProducts')
+    this.$store.dispatch('fetchEnhancemnts')
   }
 
   /*   computed: {
