@@ -1,11 +1,11 @@
 <template>
   <v-row justify="center">
     <v-col cols="8">
-      <v-data-table :headers="itemsHeaders" :items="enhacements">
+      <v-data-table :headers="itemsHeaders" :items="enhancements">
         <template v-slot:top>
           <v-toolbar flat>
             <v-toolbar-title>
-              products
+              Enhancements
             </v-toolbar-title>
             <v-divider class="mx-4" inset vertical></v-divider>
             <v-spacer></v-spacer>
@@ -142,7 +142,7 @@ export default {
       //*Edits
       if (this.itemIndex > -1) {
         this.updateItemOnServer({
-          service: this.editedItem,
+          enhancement: this.editedItem,
           index: this.itemIndex
         })
       } else {
@@ -167,7 +167,7 @@ export default {
       this.closeDelete()
     },
     editService(item) {
-      this.itemIndex = this.products.indexOf(item)
+      this.itemIndex = this.enhancements.indexOf(item)
       this.editedItem = Object.assign({}, item)
       this.dialog = true
     }

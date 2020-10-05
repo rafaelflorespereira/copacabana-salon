@@ -5,7 +5,7 @@
         <template v-slot:top>
           <v-toolbar flat>
             <v-toolbar-title>
-              products
+              Products
             </v-toolbar-title>
             <v-divider class="mx-4" inset vertical></v-divider>
             <v-spacer></v-spacer>
@@ -142,7 +142,7 @@ export default {
       //*Edits
       if (this.itemIndex > -1) {
         this.updateItemOnServer({
-          service: this.editedItem,
+          product: this.editedItem,
           index: this.itemIndex
         })
       } else {

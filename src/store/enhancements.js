@@ -5,7 +5,7 @@ export default {
   },
   mutations: {
     ADD_ENHANCEMENT(state, enhancement) {
-      state.enhancement.push(enhancement)
+      state.enhancements.push(enhancement)
     },
     REMOVE_ENHANCEMENT(state, enhancement) {
       const enhancementsId = state.enhancements.find(
@@ -13,7 +13,7 @@ export default {
       )
       state.enhancements.splice(state.enhancements.indexOf(enhancementsId), 1)
     },
-    UPDATE_PRODUCT(state, payload) {
+    UPDATE_ENHANCEMENT(state, payload) {
       console.log(payload.enhancement, state.enhancements[payload.index])
       Object.assign(state.enhancements[payload.index], payload.enhancement)
     }

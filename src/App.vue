@@ -1,11 +1,18 @@
 <template>
   <v-app>
-    <v-app-bar app color="white" hide-on-scroll>
+    <v-app-bar
+      app
+      color="white"
+      hide-on-scroll
+      prominent
+      src="https://picsum.photos/1920/1080?random"
+    >
       <v-spacer></v-spacer>
       <v-btn
         v-for="(route, index) in routes"
         :key="index"
-        color="white"
+        text
+        dark
         :to="route.url"
         >{{ route.label }}</v-btn
       >
@@ -45,7 +52,7 @@ export default {
   created() {
     this.$store.dispatch('fetchServices')
     this.$store.dispatch('fetchProducts')
-    this.$store.dispatch('fetchEnhancemnts')
+    this.$store.dispatch('fetchEnhancements')
   }
 
   /*   computed: {
