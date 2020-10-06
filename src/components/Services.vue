@@ -37,7 +37,7 @@
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field
                           v-model="editedService.category"
-                          label="category"
+                          label="Category"
                         ></v-text-field>
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
@@ -48,9 +48,11 @@
                       </v-col>
                       <v-col cols="12" sm="6" md="4">
                         <v-text-field
-                          v-model="editedService.price"
+                          v-model.number="editedService.price"
                           type="number"
                           label="Price in $"
+                          prefix="$"
+                          step="0.25"
                         ></v-text-field>
                       </v-col>
                     </v-row>
@@ -96,6 +98,11 @@
 <script>
 import { mapActions, mapGetters } from 'vuex'
 export default {
+  filters: {
+    currency(value) {
+      return value.toFixed(2)
+    }
+  },
   data: () => {
     return {
       showSnackbar: false,
@@ -106,13 +113,13 @@ export default {
         niche: '',
         category: '',
         name: '',
-        price: ''
+        price: '0.00'
       },
       defaultService: {
         niche: '',
         category: '',
         name: '',
-        price: ''
+        price: '0.00'
       },
       servicesHeaders: [
         {

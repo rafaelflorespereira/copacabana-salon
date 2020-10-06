@@ -3,27 +3,19 @@ import Vuex from 'vuex'
 import services from './services'
 import products from './products'
 import enhancements from './enhancements'
+import appointments from './appointments'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-  state: {
-    appointment: 0,
-    appointments: []
-  },
+  state: {},
   mutations: {},
+  getters: {},
   actions: {},
   modules: {
     services,
     products,
-    enhancements
-  },
-  getters: {
-    appointment: state => {
-      return state.appointment
-    },
-    appointments: state => {
-      return state.appointments
-    }
+    enhancements,
+    appointments
   }
 })

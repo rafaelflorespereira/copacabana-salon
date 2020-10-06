@@ -45,6 +45,8 @@
                           v-model="editedItem.price"
                           type="number"
                           label="Price in $"
+                          prefix="$"
+                          step="0.25"
                         ></v-text-field>
                       </v-col>
                     </v-row>
@@ -99,12 +101,12 @@ export default {
       editedItem: {
         brand: '',
         name: '',
-        price: ''
+        price: '0.00'
       },
       defaultItem: {
         brand: '',
         name: '',
-        price: ''
+        price: '0.00'
       },
       itemsHeaders: [
         {

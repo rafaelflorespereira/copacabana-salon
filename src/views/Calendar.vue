@@ -1,6 +1,6 @@
 <template>
-  <v-row>
-    <v-col>
+  <v-row justify="center">
+    <v-col cols="12" sm="8" md="6">
       <v-toolbar flat>
         <v-btn outlined class="mr-4" color="grey darken-2" @click="setToday">
           Today
@@ -61,7 +61,8 @@
           </v-calendar>
         </v-sheet>
         <v-dialog v-model="dialog" max-width="600">
-          <Appointment />
+          <Appointment :is-dialog-open="dialog" @is-dialog-open="isDialog">
+          </Appointment>
         </v-dialog>
       </v-col>
     </v-col>
@@ -110,6 +111,9 @@ export default {
     },
     next() {
       this.$refs.calendar.next()
+    },
+    isDialog(event) {
+      this.dialog = event
     }
     /* 
     createAppointment(event) {
