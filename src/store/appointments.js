@@ -18,7 +18,7 @@ export default {
   },
   actions: {
     /* products */
-    saveAppointments: ({ commit }, appointment) => {
+    saveAppointment: ({ commit }, appointment) => {
       axios
         .post(
           'https://copabacana-salon.firebaseio.com/appointments.json',
@@ -54,14 +54,14 @@ export default {
         .then(commit('UPDATE_SERVICE', payload))
         .then(error => console.log('Update Service Error: ' + error))
     },
-    fetchProducts: ({ commit }) => {
+    fetchAppointments: ({ commit }) => {
       axios
-        .get('https://copabacana-salon.firebaseio.com/products.json')
+        .get('https://copabacana-salon.firebaseio.com/appointments.json')
         .then(response => {
           for (const key in response.data) {
-            var product = response.data[key]
-            product.key = key
-            commit('ADD_PRODUCT', product)
+            var appointment = response.data[key]
+            appointment.key = key
+            commit('ADD_APPOINTMENT', appointment)
           }
         })
     }

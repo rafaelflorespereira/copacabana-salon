@@ -164,10 +164,16 @@ export default {
   },
   methods: {
     close() {
-      this.appointment = Object.assign({}, this.defaultAppointment)
-      this.hasEnhancement = false
       this.isDialogOpen = false
+      this.$nextTick(() => {
+        this.appointment = Object.assign({}, this.defaultAppointment)
+        this.hasEnhancement = false
+      })
       this.$emit('is-dialog-open', this.isDialogOpen)
+    },
+    save() {
+      this.saveOnServer(this.appointment)
+      this.close()
     }
   }
 }
