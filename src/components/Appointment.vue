@@ -16,9 +16,9 @@
           <v-select
             v-model="appointment.service"
             label="Services"
-            :items="teste"
-            :item-value="teste"
-            :item-text="text"
+            :items="servicesHeader"
+            item-value="value"
+            item-text="text"
           >
           </v-select>
         </v-col>
@@ -27,8 +27,9 @@
             v-show="hasEnhancement"
             v-model="appointment.enhancement"
             label="Enhancement"
-            :item-text="enhancements.map(el => el.name)"
-            :item-value="enhancements"
+            :items="enhancementsHeader"
+            item-value="value"
+            item-text="text"
           ></v-select>
           <v-switch
             v-model="hasEnhancement"
@@ -138,16 +139,6 @@ export default {
         endDate: '',
         totalPrice: 0.0
       },
-      teste: {
-        text: 'test 1',
-        divider: 'category 1',
-        header: 'niche',
-        value: {
-          niche: 'niche 1',
-          category: 'category 1',
-          name: 'name 1'
-        }
-      },
       hasEnhancement: false,
       menu: false,
       menu2: false
@@ -159,7 +150,28 @@ export default {
       saveOnServer: 'saveAppointment'
     }),
     totalPrice() {
-      return 0
+      return this.appointment.service.price + this.appointment.enhancement.price
+    },
+    //? I coudl refactor these two functions into one
+    servicesHeader() {
+      const header = []
+      this.services.map(el => {
+        header.push({
+          text: el.niche + ' ' + el.category + ' ' + el.name,
+          value: Object.assign({}, el)
+        })
+      })
+      return header
+    },
+    enhancementsHeader() {
+      const header = []
+      this.enhancements.map(el => {
+        header.push({
+          text: el.niche + ' ' + el.category + ' ' + el.name,
+          value: Object.assign({}, el)
+        })
+      })
+      return header
     }
   },
   methods: {
