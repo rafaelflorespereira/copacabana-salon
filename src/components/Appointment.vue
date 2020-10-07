@@ -96,7 +96,7 @@
         </v-col>
         <v-col cols="12" sm="6" md="4">
           <v-text-field
-            v-model.number="appointment.price"
+            v-model.number="totalPrice"
             type="number"
             label="Total"
             prefix="$"
@@ -109,7 +109,7 @@
     <v-card-actions>
       <v-spacer></v-spacer>
       <v-btn outlined color="primary" @click="close">Cancel</v-btn>
-      <v-btn outlined color="primary">Submit</v-btn>
+      <v-btn outlined color="primary" @click="save">Submit</v-btn>
       <v-spacer></v-spacer>
     </v-card-actions>
   </v-card>
@@ -128,16 +128,14 @@ export default {
         service: {},
         enhancement: {},
         start: '',
-        end: '',
-        totalPrice: 0.0
+        end: ''
       },
       defaultAppointment: {
         clientName: '',
         service: {},
         enhancement: {},
         startDate: '',
-        endDate: '',
-        totalPrice: 0.0
+        endDate: ''
       },
       hasEnhancement: false,
       menu: false,
@@ -146,11 +144,10 @@ export default {
   },
   computed: {
     ...mapGetters(['services', 'enhancements']),
-    ...mapActions({
-      saveOnServer: 'saveAppointment'
-    }),
     totalPrice() {
-      return this.appointment.service.price + this.appointment.enhancement.price
+      var appointment = parseFloat(this.appointment.service.price ?? 0.0)
+      var enhancement = parseFloat(this.appointment.enhancement.price ?? 0.0)
+      return appointment + enhancement
     },
     //? I coudl refactor these two functions into one
     servicesHeader() {
@@ -167,7 +164,7 @@ export default {
       const header = []
       this.enhancements.map(el => {
         header.push({
-          text: el.niche + ' ' + el.category + ' ' + el.name,
+          text: el.brand + ' ' + el.name,
           value: Object.assign({}, el)
         })
       })
@@ -175,10 +172,14 @@ export default {
     }
   },
   methods: {
+    ...mapActions({
+      saveOnServer: 'saveAppointment'
+    }),
     close() {
       this.isDialogOpen = false
       this.$nextTick(() => {
         this.appointment = Object.assign({}, this.defaultAppointment)
+        this.totalPrice = 0.0
         this.hasEnhancement = false
       })
       this.$emit('is-dialog-open', this.isDialogOpen)
