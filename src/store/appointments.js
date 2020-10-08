@@ -68,7 +68,7 @@ export default {
   },
   modules: {},
   getters: {
-    products: state => {
+    appointments: state => {
       return state.products
     }
   }
