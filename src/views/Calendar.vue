@@ -65,6 +65,7 @@
                 interval-count="36"
                 interval-minutes="30"
                 elevation="8"
+                @click:event="setAppointment"
                 @click:more="viewDay"
                 @click:date="viewDay"
                 @click:time="clickOnTime"
@@ -148,18 +149,14 @@ export default {
       this.dialog = !this.dialog
       this.date = date
       this.time = time
+      console.log(1)
     },
     resetDate() {
       this.date = ''
+    },
+    setAppointment({ event }) {
+      this.$store.dispatch('fetchAppointment', event)
     }
-    /* 
-    createAppointment(event) {
-      this.selectedOpen = true
-      const start = new Date(event.date + 'T' + event.time)
-      const end = new Date(Date.parse(start) + this.appointment.endTime * 60000)
-      this.appointment.startTime = start
-      this.appointment.endTime = end
-    } */
   }
 }
 </script>

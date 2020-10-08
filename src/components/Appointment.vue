@@ -193,6 +193,10 @@ export default {
       this.appointment.start = this.time
     }
   },
+  created() {
+    if (this.$store.getters.appointment)
+      Object.assign(this.appointment, this.$store.getters.appointment)
+  },
   methods: {
     ...mapActions({
       saveOnServer: 'saveAppointment'

@@ -6,17 +6,17 @@ Contents:
 1. Create for each Element in the Store.
    Divide the VUEX store into 3 different ones. (Done)
 2. Create the full service. (Done)
-3. Add events/appointments to the calendar
-   https://vuetifyjs.com/en/components/calendars/#usage
-4. Add services to the calendar.
-   - make the calendar not look broken.
-5. Create Client Registration.
-
+3. Add services to the calendar. (done)
+   - make the calendar not look broken.(done)
+   - edit appointments.
+   - delete appointments.
+4. Create Client Registration.
    - With FB if possible.
+   https://firebase.google.com/docs/auth/web/facebook-login
 
-6. Implement Payment.
-7. Invoice por e-mail.
-8. Create Front-end testing using cypress
+5. Implement Payment.
+6. Invoice por e-mail.
+7. Create Front-end testing using cypress
 
 
 

@@ -1,7 +1,8 @@
 import axios from 'axios'
 export default {
   state: {
-    appointments: []
+    appointments: [],
+    appointment: {}
   },
   mutations: {
     ADD_APPOINTMENT(state, appointment) {
@@ -12,8 +13,10 @@ export default {
       state.products.splice(state.products.indexOf(productsId), 1)
     },
     UPDATE_PRODUCT(state, payload) {
-      console.log(payload.product, state.products[payload.index])
       Object.assign(state.products[payload.index], payload.product)
+    },
+    SET_APPOINTMENT(state, appointment) {
+      Object.assign(state.appointment, appointment)
     }
   },
   actions: {
@@ -63,12 +66,28 @@ export default {
             commit('ADD_APPOINTMENT', appointment)
           }
         })
+    },
+    fetchAppointment: ({ commit }, appointment) => {
+      axios
+        .get(
+          'https://copabacana-salon.firebaseio.com/appointments' +
+            appointment.key +
+            '.json'
+        )
+        .then(response => {
+          console.log(response)
+          commit('SET_APPOINTMENT', appointment)
+        })
+        .then(error => console.log('Fetch appointment error ' + error))
     }
   },
   modules: {},
   getters: {
     appointments: state => {
       return state.appointments
+    },
+    appointment: state => {
+      return state.appointment
     }
   }
 }
