@@ -7,6 +7,8 @@ Contents:
    Divide the VUEX store into 3 different ones. (Done)
 2. Create the full service.
    https://vuetifyjs.com/en/api/v-select/#props
+   Add events/appointments to the calendar
+   https://vuetifyjs.com/en/components/calendars/#usage
 3. Add services to the calendar.
    - make the calendar not look broken.
 4. Create Client Registration.

@@ -57,6 +57,7 @@
                 ref="calendar"
                 v-model="focus"
                 color="primary"
+                :events="appointments"
                 :event-color="getRandomColor"
                 :type="type"
                 first-interval="6"
@@ -104,6 +105,11 @@ export default {
     dialog: false,
     isDark: false
   }),
+  computed: {
+    appointments() {
+      return this.$store.getters.appointments
+    }
+  },
   methods: {
     viewDay({ date }) {
       this.focus = date

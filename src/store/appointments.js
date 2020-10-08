@@ -17,7 +17,6 @@ export default {
     }
   },
   actions: {
-    /* products */
     saveAppointment: ({ commit }, appointment) => {
       axios
         .post(

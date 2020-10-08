@@ -107,11 +107,13 @@ export default {
       editedItem: {
         brand: '',
         name: '',
+        category: '',
         price: '0.00'
       },
       defaultItem: {
         brand: '',
         name: '',
+        category: '',
         price: '0.00'
       },
       itemsHeaders: [
@@ -122,6 +124,7 @@ export default {
           value: 'brand'
         },
         { text: 'Name', value: 'name' },
+        { text: 'Category', value: 'category' },
         { text: 'Price', value: 'price' },
         { text: 'Actions', value: 'actions', sortable: false }
       ]
