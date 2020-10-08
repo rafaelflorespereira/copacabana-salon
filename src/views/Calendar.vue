@@ -60,16 +60,27 @@
                 :events="appointments"
                 :event-color="getRandomColor"
                 :type="type"
-                first-interval="6"
+                first-interval="12"
+                interval-count="36"
                 elevation="8"
+                interval-minutes="30"
                 @click:more="viewDay"
                 @click:date="viewDay"
-                @click:time="dialog = !dialog"
+                @click:time="clickOnTime"
               >
               </v-calendar>
             </v-sheet>
-            <v-dialog v-model="dialog" max-width="600">
-              <Appointment :is-dialog-open="dialog" @is-dialog-open="isDialog">
+            <v-dialog
+              v-model="dialog"
+              max-width="600"
+              @click:outside="resetDate"
+            >
+              <Appointment
+                :date="date"
+                :time="time"
+                :is-dialog-open="dialog"
+                @is-dialog-open="isDialog"
+              >
               </Appointment>
             </v-dialog>
           </v-col>
@@ -103,7 +114,9 @@ export default {
     selectedElement: null,
     selectedOpen: false,
     dialog: false,
-    isDark: false
+    isDark: false,
+    date: '',
+    time: ''
   }),
   computed: {
     appointments() {
@@ -134,6 +147,14 @@ export default {
     },
     isDialog(event) {
       this.dialog = event
+    },
+    clickOnTime({ date, time }) {
+      this.dialog = !this.dialog
+      this.date = date
+      this.time = time
+    },
+    resetDate() {
+      this.date = ''
     }
     /* 
     createAppointment(event) {

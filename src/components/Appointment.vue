@@ -119,7 +119,15 @@
 import { mapActions, mapGetters } from 'vuex'
 export default {
   props: {
-    isDialogOpen: Boolean
+    isDialogOpen: Boolean,
+    date: {
+      type: String,
+      default: ''
+    },
+    time: {
+      type: String,
+      default: ''
+    }
   },
   data: () => {
     return {
@@ -134,8 +142,8 @@ export default {
         clientName: '',
         service: {},
         enhancement: {},
-        startDate: '',
-        endDate: ''
+        start: '',
+        end: ''
       },
       hasEnhancement: false,
       menu: false,
@@ -169,6 +177,19 @@ export default {
         })
       })
       return header
+    },
+    startDate() {
+      var min = new Date(`${this.date}T${this.appointment.start}`)
+      return min
+    },
+    endDate() {
+      var max = new Date(`${this.date}T${this.appointment.end}`)
+      return max
+    }
+  },
+  watch: {
+    time() {
+      this.appointment.start = this.time
     }
   },
   methods: {
@@ -185,7 +206,12 @@ export default {
       this.$emit('is-dialog-open', this.isDialogOpen)
     },
     save() {
-      this.saveOnServer(this.appointment)
+      this.saveOnServer(
+        Object.assign(this.appointment, {
+          start: this.startDate,
+          end: this.endDate
+        })
+      )
       this.close()
     }
   }
