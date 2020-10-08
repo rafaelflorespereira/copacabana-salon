@@ -16,7 +16,7 @@ export default {
       Object.assign(state.products[payload.index], payload.product)
     },
     SET_APPOINTMENT(state, appointment) {
-      Object.assign(state.appointment, appointment)
+      state.appointment = appointment
     }
   },
   actions: {

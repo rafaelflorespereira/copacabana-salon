@@ -65,26 +65,22 @@
                 interval-count="36"
                 interval-minutes="30"
                 elevation="8"
-                @click:event="setAppointment"
+                @click:event="openCreatedAppointment"
                 @click:more="viewDay"
                 @click:date="viewDay"
                 @click:time="clickOnTime"
               >
               </v-calendar>
+              <v-dialog v-model="dialog" max-width="600">
+                <Appointment
+                  :date="date"
+                  :time="time"
+                  :is-dialog-open="dialog"
+                  @is-dialog-open="isDialog"
+                >
+                </Appointment>
+              </v-dialog>
             </v-sheet>
-            <v-dialog
-              v-model="dialog"
-              max-width="600"
-              @click:outside="resetDate"
-            >
-              <Appointment
-                :date="date"
-                :time="time"
-                :is-dialog-open="dialog"
-                @is-dialog-open="isDialog"
-              >
-              </Appointment>
-            </v-dialog>
           </v-col>
         </v-card>
       </v-col>
@@ -118,7 +114,8 @@ export default {
     dialog: false,
     isDark: false,
     date: '',
-    time: ''
+    time: '',
+    isEditted: false
   }),
   methods: {
     viewDay({ date }) {
@@ -146,16 +143,14 @@ export default {
       this.dialog = event
     },
     clickOnTime({ date, time }) {
-      this.dialog = !this.dialog
+      this.dialog = true
       this.date = date
       this.time = time
-      console.log(1)
     },
-    resetDate() {
-      this.date = ''
-    },
-    setAppointment({ event }) {
+    openCreatedAppointment({ event }) {
+      console.log(event)
       this.$store.dispatch('fetchAppointment', event)
+      this.dialog = true
     }
   }
 }

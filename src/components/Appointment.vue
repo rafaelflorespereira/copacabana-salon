@@ -131,13 +131,7 @@ export default {
   },
   data: () => {
     return {
-      appointment: {
-        clientName: '',
-        service: {},
-        enhancement: {},
-        start: '',
-        end: ''
-      },
+      appointment: {},
       defaultAppointment: {
         clientName: '',
         service: {},
@@ -147,9 +141,11 @@ export default {
       },
       hasEnhancement: false,
       menu: false,
-      menu2: false
+      menu2: false,
+      isEditted: false //? Maybe still need it? and change it to a prop.
     }
   },
+
   computed: {
     ...mapGetters(['services', 'enhancements']),
     totalPrice() {
@@ -193,9 +189,11 @@ export default {
       this.appointment.start = this.time
     }
   },
-  created() {
-    if (this.$store.getters.appointment)
-      Object.assign(this.appointment, this.$store.getters.appointment)
+  beforeCreate() {
+    this.appointment =
+      this.$store.getters.appointment != null
+        ? this.$store.getters.appointment
+        : this.defaultAppointment
   },
   methods: {
     ...mapActions({
@@ -217,7 +215,6 @@ export default {
           end: this.changeDateFormat(this.endDate)
         })
       )
-      this.close()
     },
     changeDateFormat(date) {
       function appendLeadingZeroes(n) {
