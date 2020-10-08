@@ -57,13 +57,14 @@
                 ref="calendar"
                 v-model="focus"
                 color="primary"
-                :events="appointments"
+                event-name="clientName"
+                :events="this.$store.getters.appointments"
                 :event-color="getRandomColor"
                 :type="type"
                 first-interval="12"
                 interval-count="36"
-                elevation="8"
                 interval-minutes="30"
+                elevation="8"
                 @click:more="viewDay"
                 @click:date="viewDay"
                 @click:time="clickOnTime"
@@ -118,11 +119,6 @@ export default {
     date: '',
     time: ''
   }),
-  computed: {
-    appointments() {
-      return this.$store.getters.appointments
-    }
-  },
   methods: {
     viewDay({ date }) {
       this.focus = date

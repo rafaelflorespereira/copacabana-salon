@@ -179,6 +179,7 @@ export default {
       return header
     },
     startDate() {
+      console.log(Date.parse(this.date), Date.parse(this.appointment.start))
       var min = new Date(`${this.date}T${this.appointment.start}`)
       return min
     },
@@ -208,11 +209,33 @@ export default {
     save() {
       this.saveOnServer(
         Object.assign(this.appointment, {
-          start: this.startDate,
-          end: this.endDate
+          start: this.changeDateFormat(this.startDate),
+          end: this.changeDateFormat(this.endDate)
         })
       )
       this.close()
+    },
+    changeDateFormat(date) {
+      function appendLeadingZeroes(n) {
+        if (n <= 9) {
+          return '0' + n
+        }
+        return n
+      }
+      let formatted_date =
+        date.getFullYear() +
+        '-' +
+        appendLeadingZeroes(date.getMonth() + 1) +
+        '-' +
+        appendLeadingZeroes(date.getDate()) +
+        ' ' +
+        appendLeadingZeroes(date.getHours()) +
+        ':' +
+        appendLeadingZeroes(date.getMinutes()) +
+        ':' +
+        appendLeadingZeroes(date.getSeconds())
+
+      return formatted_date
     }
   }
 }
