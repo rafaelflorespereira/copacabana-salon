@@ -19,6 +19,7 @@ export default {
     }
   },
   actions: {
+    //TODOS: GET REPONSE
     saveEnhancement: ({ commit }, enhancement) => {
       axios
         .post(
@@ -29,8 +30,9 @@ export default {
           enhancement.key = response.data.name
           commit('ADD_ENHANCEMENT', enhancement)
         })
-        .then(error => console.log(error))
+        .catch(error => console.log(error))
     },
+    //TODOS: GET REPONSE
     updateEnhancement: ({ commit }, payload) => {
       axios
         .put(
@@ -40,7 +42,7 @@ export default {
           payload.enhancement
         )
         .then(commit('UPDATE_ENHANCEMENT', payload))
-        .then(error => console.log('Update enhancement Error: ' + error))
+        .catch(error => console.log('Update enhancement Error: ' + error))
     },
     deleteEnhancement: ({ commit }, enhancement) => {
       axios
@@ -53,7 +55,7 @@ export default {
           console.log(response)
           commit('REMOVE_ENHANCEMENT', enhancement)
         })
-        .then(error => console.log(error))
+        .catch(error => console.log(error))
     },
     fetchEnhancements: ({ commit }) => {
       axios

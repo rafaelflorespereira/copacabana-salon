@@ -75,6 +75,7 @@
                 <Appointment
                   :date="date"
                   :time="time"
+                  :appointment="appointment"
                   :is-dialog-open="dialog"
                   @is-dialog-open="isDialog"
                 >
@@ -109,6 +110,7 @@ export default {
       day: 'Day',
       '4day': '4 Days'
     },
+    appointment: {},
     selectedElement: null,
     selectedOpen: false,
     dialog: false,
@@ -142,15 +144,20 @@ export default {
     isDialog(event) {
       this.dialog = event
     },
+    //? MAYBE REFACTOR THESE 2 FUNCTIONS INTO ONE.
     clickOnTime({ date, time }) {
       this.dialog = true
-      this.date = date
-      this.time = time
+      this.$nextTick(() => {
+        this.date = date
+        this.time = time
+      })
     },
     openCreatedAppointment({ event }) {
-      console.log(event)
+      this.appointment = this.$store.getters.appointment
       this.$store.dispatch('fetchAppointment', event)
-      this.dialog = true
+      this.$nextTick(() => {
+        this.dialog = true
+      })
     }
   }
 }

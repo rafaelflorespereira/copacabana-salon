@@ -16,6 +16,7 @@ export default {
       Object.assign(state.products[payload.index], payload.product)
     }
   },
+  //TODOS: GET REPONSE
   actions: {
     /* products */
     saveProduct: ({ commit }, product) => {
@@ -26,7 +27,7 @@ export default {
           product.key = response.data.name
           commit('ADD_PRODUCT', product)
         })
-        .then(error => console.log(error))
+        .catch(error => console.log(error))
     },
     deleteProduct: ({ commit }, product) => {
       axios
@@ -38,9 +39,9 @@ export default {
         .then(response => {
           commit('REMOVE_PRODUCT', response)
         })
-        .then(error => console.log(error))
+        .catch(error => console.log(error))
     },
-    /* TODOS: */
+    //TODOS: GET REPONSE
     updateProduct({ commit }, payload) {
       axios
         .put(
@@ -49,7 +50,7 @@ export default {
             '.json'
         )
         .then(commit('UPDATE_SERVICE', payload))
-        .then(error => console.log('Update Service Error: ' + error))
+        .catch(error => console.log('Update Service Error: ' + error))
     },
     fetchProducts: ({ commit }) => {
       axios
@@ -61,6 +62,7 @@ export default {
             commit('ADD_PRODUCT', product)
           }
         })
+        .catch(error => console.log('fetchProducts Error: ', error))
     }
   },
   modules: {},

@@ -27,12 +27,13 @@ export default {
           appointment
         )
         .then(response => {
-          console.log(response.data)
-          appointment.key = response.data.name
-          commit('ADD_APPOINTMENT', appointment)
+          const appointmentResponse = JSON.parse(response.config.data)
+          appointmentResponse.key = response.data.name
+          commit('ADD_APPOINTMENT', appointmentResponse)
         })
-        .then(error => console.log(error))
+        .catch(error => console.log(error))
     },
+    //TODOS
     deleteProduct: ({ commit }, product) => {
       axios
         .delete(
@@ -43,9 +44,9 @@ export default {
         .then(response => {
           commit('REMOVE_PRODUCT', response)
         })
-        .then(error => console.log(error))
+        .catch(error => console.log(error))
     },
-    /* TODOS: */
+    //TODOS
     updateProduct({ commit }, payload) {
       axios
         .put(
@@ -54,7 +55,7 @@ export default {
             '.json'
         )
         .then(commit('UPDATE_SERVICE', payload))
-        .then(error => console.log('Update Service Error: ' + error))
+        .catch(error => console.log('Update Service Error: ' + error))
     },
     fetchAppointments: ({ commit }) => {
       axios
@@ -70,15 +71,15 @@ export default {
     fetchAppointment: ({ commit }, appointment) => {
       axios
         .get(
-          'https://copabacana-salon.firebaseio.com/appointments' +
+          'https://copabacana-salon.firebaseio.com/appointments/' +
             appointment.key +
             '.json'
         )
         .then(response => {
-          console.log(response)
-          commit('SET_APPOINTMENT', appointment)
+          console.log(response, response.data)
+          commit('SET_APPOINTMENT', response.data)
         })
-        .then(error => console.log('Fetch appointment error ' + error))
+        .catch(error => console.log('Fetch appointment error ' + error))
     }
   },
   modules: {},
@@ -87,6 +88,15 @@ export default {
       return state.appointments
     },
     appointment: state => {
+      if (!state.appointment) {
+        return {
+          clientName: '',
+          service: {},
+          enhancement: {},
+          start: '',
+          end: ''
+        }
+      }
       return state.appointment
     }
   }

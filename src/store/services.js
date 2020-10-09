@@ -21,10 +21,11 @@ export default {
       axios
         .post('https://copabacana-salon.firebaseio.com/services.json', service)
         .then(response => {
-          service.key = response.data.name
-          commit('ADD_SERVICE', service)
+          const serviceResponse = JSON.parse(response.config.data)
+          serviceResponse.key = response.data.name
+          commit('ADD_SERVICE', serviceResponse)
         })
-        .then(error => console.log(error))
+        .catch(error => console.log(error))
     },
     updateService: ({ commit }, payload) => {
       axios
@@ -34,8 +35,15 @@ export default {
             '.json',
           payload.service
         )
-        .then(commit('UPDATE_SERVICE', payload))
-        .then(error => console.log('Update Service Error: ' + error))
+        .then(response => {
+          console.log(response.data)
+          const payloadResponse = {
+            service: response.data,
+            index: payload.index
+          }
+          commit('UPDATE_SERVICE', payloadResponse)
+        })
+        .catch(error => console.log('Update Service Error: ' + error))
     },
     deleteService: ({ commit }, service) => {
       axios
@@ -48,7 +56,7 @@ export default {
           console.log(response)
           commit('REMOVE_SERVICE', service)
         })
-        .then(error => console.log(error))
+        .catch(error => console.log('Delete Services error: ', error))
     },
     fetchServices: ({ commit }) => {
       axios
@@ -60,6 +68,7 @@ export default {
             commit('ADD_SERVICE', service)
           }
         })
+        .catch(error => console.log('fetchServices Error: ', error))
     }
   },
   getters: {

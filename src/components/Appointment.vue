@@ -127,11 +127,22 @@ export default {
     time: {
       type: String,
       default: ''
+    },
+    appointment: {
+      type: Object,
+      default: () => {
+        return {
+          clientName: '',
+          service: {},
+          enhancement: {},
+          start: '',
+          end: ''
+        }
+      }
     }
   },
   data: () => {
     return {
-      appointment: {},
       defaultAppointment: {
         clientName: '',
         service: {},
@@ -148,10 +159,11 @@ export default {
 
   computed: {
     ...mapGetters(['services', 'enhancements']),
+    //! CONSERTAR ESSA FUNÇÃO
     totalPrice() {
-      var appointment = parseFloat(this.appointment.service.price ?? 0.0)
-      var enhancement = parseFloat(this.appointment.enhancement.price ?? 0.0)
-      return appointment + enhancement
+      var appointment = 0.0
+      var enhancement = 0.0
+      return parseFloat(appointment) + parseFloat(enhancement)
     },
     //? I coudl refactor these two functions into one
     servicesHeader() {
@@ -175,7 +187,6 @@ export default {
       return header
     },
     startDate() {
-      console.log(Date.parse(this.date), Date.parse(this.appointment.start))
       var min = new Date(`${this.date}T${this.appointment.start}`)
       return min
     },
@@ -187,54 +198,57 @@ export default {
   watch: {
     time() {
       this.appointment.start = this.time
+    },
+    appointment() {
+      return this.$store.getters.appointment
     }
-  },
-  beforeCreate() {
-    this.appointment =
-      this.$store.getters.appointment != null
-        ? this.$store.getters.appointment
-        : this.defaultAppointment
   },
   methods: {
     ...mapActions({
       saveOnServer: 'saveAppointment'
     }),
     close() {
-      this.isDialogOpen = false
+      this.$emit('is-dialog-open', false)
       this.$nextTick(() => {
         this.appointment = Object.assign({}, this.defaultAppointment)
         this.totalPrice = 0.0
         this.hasEnhancement = false
       })
-      this.$emit('is-dialog-open', this.isDialogOpen)
     },
     save() {
-      this.saveOnServer(
-        Object.assign(this.appointment, {
-          start: this.changeDateFormat(this.startDate),
-          end: this.changeDateFormat(this.endDate)
-        })
-      )
+      if (!this.appointment.key) {
+        this.saveOnServer(
+          Object.assign(this.appointment, {
+            start: this.changeDateFormat(this.startDate),
+            end: this.changeDateFormat(this.endDate)
+          })
+        )
+        this.close()
+      } else {
+        this.close()
+      }
+    },
+    appendLeadingZeroes(n) {
+      return n <= 9 ? '0' + n : n
+    },
+    getTimeFromDate(date) {
+      let hour = this.appendLeadingZeroes(date.getHours())
+      let minute = this.appendLeadingZeroes(date.getMinutes())
+      return hour + minute
     },
     changeDateFormat(date) {
-      function appendLeadingZeroes(n) {
-        if (n <= 9) {
-          return '0' + n
-        }
-        return n
-      }
       let formatted_date =
         date.getFullYear() +
         '-' +
-        appendLeadingZeroes(date.getMonth() + 1) +
+        this.appendLeadingZeroes(date.getMonth() + 1) +
         '-' +
-        appendLeadingZeroes(date.getDate()) +
+        this.appendLeadingZeroes(date.getDate()) +
         ' ' +
-        appendLeadingZeroes(date.getHours()) +
+        this.appendLeadingZeroes(date.getHours()) +
         ':' +
-        appendLeadingZeroes(date.getMinutes()) +
+        this.appendLeadingZeroes(date.getMinutes()) +
         ':' +
-        appendLeadingZeroes(date.getSeconds())
+        this.appendLeadingZeroes(date.getSeconds())
 
       return formatted_date
     }
